@@ -20,10 +20,10 @@ jobs:
       matrix:
         target: [win64]
         variant: [nonfree 8.1]
-        quickbuild: [0]
         include:
           - target: win64
             variant: nonfree
+            quickbuild: ''
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
