@@ -1,5 +1,6 @@
 name: Test Full Build
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - master
@@ -17,18 +18,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [win64,linux64,linuxarm64]
-        variant: [lgpl,gpl 6.1,gpl 8.1,lgpl 6.1,lgpl 8.1,gpl-shared,lgpl-shared,gpl-shared 6.1,gpl-shared 8.1,lgpl-shared 6.1,lgpl-shared 8.1]
+        target: [win64]
+        variant: [nonfree, nonfree 8.1]
         quickbuild: [1]
         include:
           - target: win64
-            variant: gpl
-            quickbuild: ''
-          - target: linux64
-            variant: gpl
-            quickbuild: ''
-          - target: linuxarm64
-            variant: gpl
+            variant: nonfree
             quickbuild: ''
     steps:
       - name: Free Disk-Space
