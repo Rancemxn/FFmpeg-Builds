@@ -19,12 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64]
-        variant: [nonfree, nonfree 8.1]
-        quickbuild: [1]
+        variant: [nonfree 8.1]
         include:
           - target: win64
             variant: nonfree
-            quickbuild: ''
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -49,7 +47,7 @@ jobs:
       - name: Build Image
         run: ./makeimage.sh ${{ matrix.target }} ${{ matrix.variant }}
         env:
-          QUICKBUILD: ${{ matrix.quickbuild }}
+          QUICKBUILD: 0
       - name: Build ffmpeg
         run: ./build.sh ${{ matrix.target }} ${{ matrix.variant }}
       - name: Replace spaces in string
