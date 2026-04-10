@@ -46,8 +46,6 @@ jobs:
             download-cache-
       - name: Build Image
         run: ./makeimage.sh ${{ matrix.target }} ${{ matrix.variant }}
-        env:
-          QUICKBUILD: 0
       - name: Build ffmpeg
         run: ./build.sh ${{ matrix.target }} ${{ matrix.variant }}
       - name: Replace spaces in string
