@@ -22,6 +22,7 @@ jobs:
       matrix:
         target: [win64]
         variant: [nonfree 8.1]
+        quickbuild: [1]
         include:
           - target: win64
             variant: nonfree
