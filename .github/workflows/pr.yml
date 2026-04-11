@@ -10,6 +10,8 @@ on:
 
 env:
   DOCKER_BUILDKIT: 1
+  FFMPEG_REPO: https://github.com/Rancemxn/FFmpeg.git
+  GIT_BRANCH: release/8.1
 
 jobs:
   build:
@@ -50,7 +52,7 @@ jobs:
         env:
           QUICKBUILD: ${{ matrix.quickbuild }}
       - name: Build ffmpeg
-        run: ./build.sh ${{ matrix.target }} ${{ matrix.variant }}
+        run: FFMPEG_REPO_OVERRIDE="${{ env.FFMPEG_REPO }}" GIT_BRANCH_OVERRIDE="${{ env.GIT_BRANCH }}" ./build.sh ${{ matrix.target }} ${{ matrix.variant }}
       - name: Replace spaces in string
         id: strs
         run: |
