@@ -51,6 +51,28 @@ jobs:
           tags: ${{ steps.imagename.outputs.name }}:latest
           cache-to: type=registry,mode=max,ref=${{ steps.imagename.outputs.name }}:cache
           cache-from: type=registry,ref=${{ steps.imagename.outputs.name }}:cache
+      - name: Get download cache key
+        id: dl_cache
+        run: |
+          echo "dltagname=$(./util/get_dl_cache_tag.sh)" >> $GITHUB_OUTPUT
+      - name: Cache
+        uses: actions/cache@v5
+        with:
+          path: .cache/downloads
+          key: download-cache-${{ steps.dl_cache.outputs.dltagname }}
+          restore-keys: |
+            download-cache-
+      - name: Update Cache
+        run: |
+          set -e
+          ./download.sh
+          ./util/clean_cache.sh
+      - name: Upload cache artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: download-cache
+          overwrite: true
+          path: .cache/downloads
       - name: Cleanup
         continue-on-error: true
         uses: BtbN/delete-untagged-ghcr-action@main
@@ -157,13 +179,11 @@ jobs:
         run: T="$(echo -n ${{ github.token }} | sha256sum | head -c 64)" && echo -e "::add-mask::${T}\n::stop-commands::${T}"
       - name: Generate Dockerfile
         run: ./generate.sh ${{ matrix.target }} ${{ matrix.variant }} 8.1
-      - name: Cache
-        uses: actions/cache/restore@v5
+      - name: Download cache artifact
+        uses: actions/download-artifact@v8
         with:
+          name: download-cache
           path: .cache/downloads
-          key: download-cache-${{ steps.dl_cache.outputs.dltagname }}
-          restore-keys: |
-            download-cache-
       - name: Build target image
         uses: docker/build-push-action@v7
         with:
